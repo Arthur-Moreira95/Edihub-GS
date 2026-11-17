@@ -27,7 +27,7 @@ Plataforma que reúne editais e prazos de vestibulares públicos, privados e con
 | Arthur Moreira Costa | 571532 |
 | Henrique Nunes Mororó | 574073 |
 
-Também em [Integrantes.md](Integrantes.md). O uso de IA no projeto está registrado em [AI.md](AI.md).
+Também em [docs/Integrantes.md](docs/Integrantes.md). O uso de IA no projeto está registrado em [docs/AI.md](docs/AI.md).
 
 ## Como rodar
 
@@ -161,6 +161,10 @@ public/
 ├── logos/                   # logos das instituições
 ├── ads/                     # banner e pop-up do anúncio
 └── patterns/                # padrão de ícones de fundo (tema claro e escuro)
+
+docs/
+├── AI.md                    # registro do uso de IA (prompts)
+└── Integrantes.md           # nomes e RMs da equipe
 ```
 
 ## Ferramentas e tecnologias
@@ -181,7 +185,7 @@ public/
 | [Node.js](https://nodejs.org) + npm | 24 / 11 | Ambiente e pacotes |
 | [Visual Studio Code](https://code.visualstudio.com) e [Prettier](https://prettier.io) | — | Editor e formatação do código |
 | [Git](https://git-scm.com) e [GitHub](https://github.com) | — | Versionamento e hospedagem |
-| [Claude Code](https://claude.com/claude-code) | — | Assistente de IA: detalhes em [AI.md](AI.md) |
+| [Claude Code](https://claude.com/claude-code) | — | Assistente de IA: detalhes em [docs/AI.md](docs/AI.md) |
 
 ## Acessibilidade e uso real
 
