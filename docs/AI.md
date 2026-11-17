@@ -32,9 +32,7 @@ Pedidos feitos pela equipe nesta etapa do projeto, em ordem, com o que mudou no 
 | 16 | "Nessa parte use um fundo com ícones assim como o anexado" | Padrão de ícones criado pela equipe aplicado ao fundo, com versão para o tema escuro | `HowItWorks.jsx`, `public/patterns/` |
 | 17 | "Tire as bolinhas do rastro do radar. De resto mantenha" | Remoção dos pontinhos do rastro | `RadarTrail.jsx` |
 | 18 | "Publique isso no meu GitHub colocando o README com todas as ferramentas que eu usei e os integrantes" | Repositório Git, README, Integrantes e este arquivo | `README.md`, `Integrantes.md`, `AI.md` |
-| 19 | "Faça a parte da integração com API externa para o CRUD" | Lembretes do estudante salvos no MockAPI (criar, listar, editar, marcar como feito, excluir e desfazer), com camadas separadas, custom hook, validação e tratamento de erros; testado de ponta a ponta com um servidor local que imita o MockAPI | `src/services/`, `src/lib/lembretes.js`, `src/context/LembretesContext.jsx`, `src/hooks/useLembretes.js`, `src/components/lembretes/` |
-| 20 | "Faça isso do MockAPI. Já criei uma conta e um projeto com nome Edihub" | Configuração do MockAPI da equipe (`.env`), teste de ponta a ponta contra a API real e correção de dois problemas que só aparecem com a demora de uma API de verdade: texto novo apagado ao salvar e foco perdido enquanto salva | `.env`, `src/services/lembretesService.js`, `src/components/lembretes/` |
-| 21 | "Atualize as mudanças no GitHub (…) separe os arquivos md em uma pasta (…) hospede isso no Vercel" | Documentação movida para `docs/`, build conferido a partir de um clone limpo, site publicado na Vercel pela equipe e testado no ar (páginas, imagens, temas, celular e CRUD contra o MockAPI) | `docs/`, `README.md`, `.gitignore` |
+| 19 | "Atualize as mudanças no GitHub (…) separe os arquivos md em uma pasta (…) hospede isso no Vercel" | Documentação movida para `docs/`, build conferido a partir de um clone limpo, site publicado na Vercel pela equipe e testado no ar (páginas, imagens, temas, celular e CRUD contra o MockAPI) | `docs/`, `README.md`, `.gitignore` |
 
 ## O que a equipe conferiu
 
