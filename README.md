@@ -40,18 +40,18 @@ npm run build     # gera a versão de produção em dist/
 npm run preview   # serve a versão de produção
 ```
 
-O endereço da API externa fica no arquivo `.env` (modelo em [`.env.example`](.env.example)). Sem ele, o site funciona normalmente e o painel de lembretes avisa que a API não foi configurada.
+O endereço da API externa já está no arquivo [`.env`](.env) (modelo em [`.env.example`](.env.example)). Sem ele, o site funciona normalmente e o painel de lembretes avisa que a API não foi configurada.
 
 ## Integração com API externa (CRUD)
 
-Os **lembretes do estudante** ficam salvos numa API REST externa, o [MockAPI.io](https://mockapi.io). São as tarefas que ele anota para cada edital, como "Separar documentos para a isenção da UERJ, até 20/11". O painel aparece em **Meu radar** (todos os lembretes) e na **ficha de cada edital** (só os daquele edital).
+Os **lembretes do estudante** ficam salvos numa API REST externa, o [MockAPI.io](https://mockapi.io), no endereço `https://6afbb37d892984c4494a200e.mockapi.io/lembrete`. São as tarefas que ele anota para cada edital, como "Separar documentos para a isenção da UERJ, até 20/11". O painel aparece em **Meu radar** (todos os lembretes) e na **ficha de cada edital** (só os daquele edital).
 
 | Operação | Requisição | Na tela |
 | --- | --- | --- |
-| **Create** | `POST /lembretes` | Formulário "O que você precisa fazer?" |
-| **Read** | `GET /lembretes?dono=<id>` | Lista carregada ao abrir o painel, ordenada (pendentes primeiro, por data) |
-| **Update** | `PUT /lembretes/:id` | Marcar como feito e editar texto, edital ou data |
-| **Delete** | `DELETE /lembretes/:id` | Botão da lixeira, com "Desfazer" (que recria o lembrete com um novo `POST`) |
+| **Create** | `POST /lembrete` | Formulário "O que você precisa fazer?" |
+| **Read** | `GET /lembrete?dono=<id>` | Lista carregada ao abrir o painel, ordenada (pendentes primeiro, por data) |
+| **Update** | `PUT /lembrete/:id` | Marcar como feito e editar texto, edital ou data |
+| **Delete** | `DELETE /lembrete/:id` | Botão da lixeira, com "Desfazer" (que recria o lembrete com um novo `POST`) |
 
 Formato de um lembrete: `{ id, dono, editalId, titulo, data: "AAAA-MM-DD", feito, criadoEm }`. O campo `dono` é um identificador aleatório do navegador, gerado na primeira visita: cada visitante vê só os próprios lembretes, e nenhum dado pessoal é enviado.
 
@@ -65,16 +65,22 @@ Formato de um lembrete: `{ id, dono, editalId, titulo, data: "AAAA-MM-DD", feito
 | Camada | Arquivo | Responsabilidade |
 | --- | --- | --- |
 | Acesso aos dados | [`services/apiClient.js`](src/services/apiClient.js) | `fetch` com tempo limite, tratamento de erro HTTP e endereço vindo do `.env` |
-| Acesso aos dados | [`services/lembretesService.js`](src/services/lembretesService.js) | As quatro operações do CRUD no recurso `/lembretes` |
+| Acesso aos dados | [`services/lembretesService.js`](src/services/lembretesService.js) | As quatro operações do CRUD no recurso `/lembrete` |
 | Regras de negócio | [`lib/lembretes.js`](src/lib/lembretes.js) | Validação, situação (atrasado, hoje, em breve, feito) e ordenação |
 | Estado | [`context/LembretesContext.jsx`](src/context/LembretesContext.jsx) | Lista compartilhada entre as telas e atualização otimista com reversão |
 | Custom hook | [`hooks/useLembretes.js`](src/hooks/useLembretes.js) | Dispara a busca e entrega a lista filtrada e as operações para os componentes |
 | Apresentação | [`components/lembretes/`](src/components/lembretes/) | `LembretesPanel`, `LembreteForm` (criar e editar) e `LembreteItem` |
 
-**Configurar o MockAPI**
+**Configuração**
+
+O projeto já vem configurado: o arquivo [`.env`](.env) aponta para o MockAPI da equipe, então é só rodar `npm install` e `npm run dev`. O endereço não é segredo, porque o MockAPI é público e só guarda lembretes anônimos.
+
+Para usar outro projeto do MockAPI:
 1. Crie um projeto gratuito em [mockapi.io](https://mockapi.io).
-2. Crie o recurso **`lembretes`** com os campos `dono` (String), `editalId` (String), `titulo` (String), `data` (String), `feito` (Boolean) e `criadoEm` (Date).
-3. Copie o endereço do projeto para o `.env`: `VITE_API_URL=https://<id>.mockapi.io/api/v1`.
+2. Crie o recurso **`lembrete`** com os campos `dono` (String), `editalId` (String), `titulo` (String), `data` (String), `feito` (Boolean) e `criadoEm` (Date).
+3. Troque o endereço no `.env`: `VITE_API_URL=https://<id>.mockapi.io` (sem barra no final).
+
+**Como foi testado:** um teste automatizado no navegador passou por todo o fluxo contra o MockAPI real, em 18 verificações: criar, listar, editar, marcar como feito, excluir, desfazer, persistência após recarregar, filtro por edital, lista compartilhada entre as telas, validação, erro 500 com reversão, acentos e limpeza dos registros de teste.
 
 ## Funcionalidades
 

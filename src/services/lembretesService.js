@@ -9,7 +9,7 @@ import { request } from './apiClient.js';
  * `dono` é um identificador aleatório deste navegador (sem dado pessoal), para cada
  * visitante ver só os próprios lembretes.
  */
-const RECURSO = '/lembretes';
+const RECURSO = '/lembrete'; // nome do recurso no projeto do MockAPI
 
 /** READ: lista os lembretes de um dono. */
 export const listarLembretes = (dono, { signal } = {}) => request(RECURSO, { query: { dono }, signal });
