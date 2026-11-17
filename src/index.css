@@ -1,0 +1,242 @@
+@import 'tailwindcss';
+
+/*
+ * Tokens visuais do Edihub
+ * Paleta extraída do protótipo (edihub-front-prototipo):
+ *  - fundos escuros slate-950 / 900 / 800
+ *  - gradiente navy do hero #081437 → #0E2468 → #1D4ED8
+ *  - azul primário #2563EB (hover #1D4ED8), azuis claros #BFDBFE / #93C5FD
+ *  - verde de ação #16A34A (hover #22C55E)
+ *  - laranja / âmbar de alerta e retificação
+ *  - violeta #7C3AED para a área B2B
+ */
+@theme {
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+
+  /* superfícies */
+  --color-base: #020617;
+  --color-surface: #0f172a;
+  --color-raised: #1e293b;
+  --color-line: #1e293b;
+  --color-line-strong: #334155;
+
+  /* texto */
+  --color-ink: #f1f5f9;
+  --color-ink-soft: #cbd5e1;
+  --color-muted: #94a3b8;
+  --color-faint: #64748b;
+
+  /* marca */
+  --color-navy-950: #081437;
+  --color-navy-900: #0e2468;
+  --color-primary: #2563eb;
+  --color-primary-strong: #1d4ed8;
+  --color-primary-soft: #93c5fd;
+  --color-primary-mist: #bfdbfe;
+
+  /* ação, alerta e B2B */
+  --color-action: #16a34a;
+  --color-action-strong: #22c55e;
+  --color-alert: #f97316;
+  --color-alert-soft: #fdba74;
+  --color-rectify: #f59e0b;
+  --color-school: #7c3aed;
+  --color-school-soft: #c4b5fd;
+  --color-danger: #ef4444;
+
+  /* texto sobre fundos tingidos de retificação/erro (bg-rectify/15, bg-danger/15) */
+  --color-rectify-ink: #fcd34d;
+  --color-danger-ink: #fca5a5;
+
+  /* hover: fundo de botões/ícones (hover), de linhas/links (hover-soft) e borda de cartões/pílulas */
+  --color-hover: #1e293b;
+  --color-hover-soft: rgb(30 41 59 / 0.5);
+  --color-hover-line: rgb(147 197 253 / 0.5);
+
+  /* cor das sombras e do véu atrás de modais */
+  --color-shade: #000000;
+  --color-scrim: #020617;
+
+  /* fundo do preview do WhatsApp (mesmo do protótipo) */
+  --color-wa-paper: #e7ddd0;
+}
+
+/*
+ * Tema claro "azul-céu": a mesma identidade do escuro (navy + azul), em versão clara.
+ * Sem branco nem cinza neutro: fundos, bordas, textos e sombras são todos
+ * tons de azul. Os tokens são os mesmos do @theme, então todo componente se adapta sozinho.
+ * Regras de contraste: texto de corpo ≥ 7:1; texto secundário e cores de destaque
+ * usadas como texto ≥ 4.5:1 sobre a página, os cartões e os fundos tingidos (/15).
+ * O atributo data-theme é definido pelo script em index.html (antes da pintura)
+ * e mantido pelo ThemeContext.
+ */
+:root[data-theme='light'] {
+  /* superfícies: tudo em azul claro, sem branco. Página azul-claro, cartões um tom
+     mais suave (para destacar da página), realces e hover um tom mais forte */
+  --color-base: #c8dbf8;
+  --color-surface: #dae6fa;
+  --color-raised: #b9cff3;
+  --color-line: #abc4ec;
+  --color-line-strong: #8aaae0;
+
+  /* texto: escala de azul-marinho (mesma família do navy do tema escuro).
+     Contraste mínimo: ink 11:1, ink-soft 8.7:1, muted 6.4:1, faint 5.2:1 (no pior fundo) */
+  --color-ink: #071737;
+  --color-ink-soft: #142a5c;
+  --color-muted: #264075;
+  --color-faint: #334d82;
+
+  /* marca: os tons "claros" viram tons escuros, porque são usados como texto de destaque;
+     navy-950/900 (fundos de destaque) viram azuis um pouco mais fortes que os cartões */
+  --color-navy-950: #b3cbf5;
+  --color-navy-900: #9dbbef;
+  --color-primary: #2563eb;
+  --color-primary-strong: #1e40af;
+  --color-primary-soft: #1a44c2;
+  --color-primary-mist: #1e3a8a;
+
+  /* cores de status como texto: tons escuros (≥ 4.6:1 sobre todos os fundos azuis) */
+  --color-action: #16a34a;
+  --color-action-strong: #14532d;
+  --color-alert: #ea580c;
+  --color-alert-soft: #9a3412;
+  --color-rectify: #d97706;
+  --color-school: #7c3aed;
+  --color-school-soft: #5b21b6;
+  --color-danger: #dc2626;
+
+  --color-rectify-ink: #7c2d12;
+  --color-danger-ink: #991b1b;
+
+  /* hover bem visível sobre os fundos azuis: dois a três degraus mais forte que a página */
+  --color-hover: #9cbaef;
+  --color-hover-soft: #afc9f4;
+  --color-hover-line: #3b67c9;
+
+  /* sombras e véu dos modais em azul-marinho, não em preto/cinza */
+  --color-shade: #1e3a8a;
+  --color-scrim: #0a1a3f;
+
+  /* hero: o mesmo degradê do escuro, em azul claro, descendo até a cor da página */
+  /* hero = mar raso e iluminado: azul com um toque de turquesa, mais claro onde a bússola flutua */
+  --hero-bg:
+    radial-gradient(50% 60% at 76% 46%, rgb(186 222 255 / 0.65), transparent 70%),
+    radial-gradient(70% 55% at 12% 8%, rgb(56 189 248 / 0.22), transparent 70%),
+    linear-gradient(180deg, #82b6ef 0%, #97c3f3 40%, #b0cff7 78%, #c8dbf8 100%);
+  /* mar (OceanBackground): espuma clara nas cristas, vale azul-marinho suave, reflexos e ondas do cursor */
+  --sea-line: 236, 245, 255;
+  --sea-line-alpha: 0.55;
+  --sea-shadow: 30, 64, 175;
+  --sea-shadow-alpha: 0.16;
+  --sea-glint: 248, 252, 255;
+  --sea-glint-alpha: 0.95;
+  --sea-ripple: 240, 248, 255;
+  --sea-ripple-alpha: 0.8;
+  /* radar: rastro de fósforo e ecos (RadarTrail) */
+  --radar-trail: 29, 78, 216;
+  --radar-trail-alpha: 0.3;
+  /* padrão de ícones de fundo (seção "Como funciona") */
+  --pattern-opacity: 0.16;
+  /* eventos do calendário: cor da instituição quase pura (texto branco continua legível) */
+  --event-tint: 88%;
+
+  /* chamada final: degradê azul-claro um pouco mais forte que a página, texto navy */
+  --cta-bg: linear-gradient(120deg, #b3cbf5 0%, #a5c2f4 55%, #8fb3f0 100%);
+  --cta-border: #8aaae0;
+  --cta-title: #071737;
+  --cta-text: #142a5c;
+  --cta-outline: rgb(7 23 55 / 0.3);
+  --cta-outline-hover: rgb(7 23 55 / 0.5);
+  --cta-outline-bg: rgb(255 255 255 / 0.2);
+
+  color-scheme: light;
+}
+
+:root {
+  /* hero = oceano à noite: azul profundo com um toque de turquesa, luz onde a bússola flutua */
+  --hero-bg:
+    radial-gradient(50% 60% at 76% 46%, rgb(37 99 235 / 0.38), transparent 70%),
+    radial-gradient(70% 55% at 12% 8%, rgb(14 116 144 / 0.28), transparent 70%),
+    linear-gradient(180deg, #071c4f 0%, #0a2866 40%, #061a48 75%, #020617 100%);
+  --sea-line: 147, 197, 253;
+  --sea-line-alpha: 0.16;
+  --sea-shadow: 2, 6, 23;
+  --sea-shadow-alpha: 0.35;
+  --sea-glint: 219, 234, 254;
+  --sea-glint-alpha: 0.7;
+  --sea-ripple: 147, 197, 253;
+  --sea-ripple-alpha: 0.5;
+  --radar-trail: 59, 130, 246;
+  --radar-trail-alpha: 0.5;
+  --pattern-opacity: 0.09;
+  --event-tint: 55%;
+
+  /* chamada final (escuro): faixa navy de destaque, igual ao original */
+  --cta-bg: linear-gradient(120deg, #081437 0%, #0e2468 55%, #1d4ed8 100%);
+  --cta-border: transparent;
+  --cta-title: #ffffff;
+  --cta-text: rgb(219 234 254 / 0.9);
+  --cta-outline: rgb(255 255 255 / 0.3);
+  --cta-outline-hover: rgb(147 197 253 / 0.6);
+  --cta-outline-bg: rgb(255 255 255 / 0.1);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :root[data-theme='light'] {
+    color-scheme: light;
+  }
+  /* troca de tema suave, sem animar o carregamento inicial */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease,
+      fill 200ms ease,
+      stroke 200ms ease !important;
+  }
+  body {
+    @apply bg-base font-sans text-ink antialiased;
+    font-feature-settings:
+      'ss01',
+      'tnum' 0;
+  }
+  ::selection {
+    background: rgb(37 99 235 / 0.45);
+  }
+  :root[data-theme='light'] ::selection {
+    background: rgb(37 99 235 / 0.2);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary-soft);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#020617" />
+    <!--
+      Aplica o tema antes da primeira pintura (evita piscar).
+      1ª visita: usa o tema do sistema operacional (Windows/macOS: Claro ou Escuro).
+      Depois que o usuário troca pelo botão do header, vale a escolha salva.
+    -->
+    <script>
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem('edihub:tema');
+        } catch (e) {}
+        var theme =
+          saved === 'light' || saved === 'dark'
+            ? saved
+            : window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#020617' : '#c8dbf8');
+      })();
+    </script>
+    <meta
+      name="description"
+      content="Edihub centraliza editais de vestibulares públicos, privados e militares e avisa você sobre prazos e retificações."
+    />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Edihub · Editais e prazos de vestibulares</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
