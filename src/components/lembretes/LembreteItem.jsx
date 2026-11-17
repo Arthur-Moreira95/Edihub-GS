@@ -13,7 +13,11 @@ const SITUACAO = {
   futuro: { texto: null, classe: 'text-muted' },
 };
 
-/** Um lembrete da lista: marcar como feito, editar no lugar e excluir. */
+/**
+ * Um lembrete da lista: marcar como feito, editar no lugar e excluir.
+ * Enquanto salva, os botões ficam com aria-disabled (e ignoram o clique) em vez de disabled,
+ * para o foco não sair do lugar e o teclado continuar funcionando.
+ */
 export function LembreteItem({ lembrete, edital, editais, mostrarEdital, onToggle, onEdit, onDelete }) {
   const [editando, setEditando] = useState(false);
   const { chave, dias } = situacaoLembrete(lembrete);
@@ -47,8 +51,8 @@ export function LembreteItem({ lembrete, edital, editais, mostrarEdital, onToggl
         role="checkbox"
         aria-checked={lembrete.feito}
         aria-label={lembrete.feito ? `Desmarcar "${lembrete.titulo}"` : `Marcar "${lembrete.titulo}" como feito`}
-        onClick={() => onToggle(lembrete)}
-        disabled={lembrete.salvando}
+        onClick={() => !lembrete.salvando && onToggle(lembrete)}
+        aria-disabled={lembrete.salvando}
         className={cn(
           'mt-0.5 grid size-6 shrink-0 place-items-center rounded-md border-2 transition-colors',
           lembrete.feito ? 'border-action bg-action text-white' : 'border-line-strong hover:border-hover-line',
@@ -71,8 +75,8 @@ export function LembreteItem({ lembrete, edital, editais, mostrarEdital, onToggl
       <div className="flex shrink-0 items-center">
         <button
           type="button"
-          onClick={() => setEditando(true)}
-          disabled={lembrete.salvando}
+          onClick={() => !lembrete.salvando && setEditando(true)}
+          aria-disabled={lembrete.salvando}
           aria-label={`Editar "${lembrete.titulo}"`}
           className="grid size-9 place-items-center rounded-lg text-muted hover:bg-hover hover:text-ink"
         >
@@ -80,8 +84,8 @@ export function LembreteItem({ lembrete, edital, editais, mostrarEdital, onToggl
         </button>
         <button
           type="button"
-          onClick={() => onDelete(lembrete)}
-          disabled={lembrete.salvando}
+          onClick={() => !lembrete.salvando && onDelete(lembrete)}
+          aria-disabled={lembrete.salvando}
           aria-label={`Excluir "${lembrete.titulo}"`}
           className="grid size-9 place-items-center rounded-lg text-muted hover:bg-danger/10 hover:text-danger-ink"
         >

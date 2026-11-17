@@ -30,6 +30,7 @@ export function LembreteForm({
 }) {
   const selectId = useId();
   const tituloRef = useRef(null);
+  const enviandoRef = useRef(false); // trava síncrona contra envio duplo (o estado só muda no próximo render)
   const [dados, setDados] = useState(
     () => inicial ?? { titulo: '', data: hojeISO(), editalId: editalFixo ?? editais[0]?.id ?? '' },
   );
@@ -43,18 +44,24 @@ export function LembreteForm({
 
   async function enviar(e) {
     e.preventDefault();
+    if (enviandoRef.current) return; // já está salvando: ignora o segundo envio
     const encontrados = validarLembrete(dados, { editaisValidos: editais.map((x) => x.id), permitirPassado });
     setErros(encontrados);
     if (Object.keys(encontrados).length) return;
+    const enviado = { ...dados, titulo: dados.titulo.trim() };
+    enviandoRef.current = true;
     setEnviando(true);
+    // ao criar, limpa o campo já no envio (o lembrete aparece na lista na hora): assim o
+    // estudante pode digitar o próximo enquanto a API responde, sem o texto novo ser apagado
+    if (!inicial) setDados((d) => ({ ...d, titulo: '' }));
     try {
-      await onSubmit({ ...dados, titulo: dados.titulo.trim() });
-      if (!inicial) setDados((d) => ({ ...d, titulo: '' })); // pronto para o próximo
+      await onSubmit(enviado);
+    } catch {
+      // a API recusou: devolve o texto para não perder o que foi digitado (o aviso vem do painel)
+      if (!inicial) setDados((d) => (d.titulo ? d : { ...d, titulo: enviado.titulo }));
     } finally {
+      enviandoRef.current = false;
       setEnviando(false);
-      // o botão fica desabilitado enquanto salva e o navegador tira o foco dele;
-      // devolve o foco ao campo para o teclado (e o Esc dos modais) continuar funcionando
-      requestAnimationFrame(() => tituloRef.current?.focus({ preventScroll: true }));
     }
   }
 
@@ -101,7 +108,9 @@ export function LembreteForm({
         className={cn(editalFixo && 'sm:col-span-2')}
       />
       <div className="flex flex-wrap gap-2 sm:col-span-2">
-        <Button type="submit" disabled={enviando} className="w-full sm:w-auto">
+        {/* aria-disabled em vez de disabled: um botão desabilitado perde o foco, que iria para a
+            página, e o teclado (e o Esc das janelas) deixaria de funcionar enquanto salva */}
+        <Button type="submit" aria-disabled={enviando} className={cn('w-full sm:w-auto', enviando && 'cursor-wait opacity-70')}>
           {enviando && <Loader2 className="size-4 animate-spin" aria-hidden />}
           {enviando ? 'Salvando…' : textoBotao}
         </Button>
