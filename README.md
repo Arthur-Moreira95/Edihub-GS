@@ -40,6 +40,42 @@ npm run build     # gera a versão de produção em dist/
 npm run preview   # serve a versão de produção
 ```
 
+O endereço da API externa fica no arquivo `.env` (modelo em [`.env.example`](.env.example)). Sem ele, o site funciona normalmente e o painel de lembretes avisa que a API não foi configurada.
+
+## Integração com API externa (CRUD)
+
+Os **lembretes do estudante** ficam salvos numa API REST externa, o [MockAPI.io](https://mockapi.io). São as tarefas que ele anota para cada edital, como "Separar documentos para a isenção da UERJ, até 20/11". O painel aparece em **Meu radar** (todos os lembretes) e na **ficha de cada edital** (só os daquele edital).
+
+| Operação | Requisição | Na tela |
+| --- | --- | --- |
+| **Create** | `POST /lembretes` | Formulário "O que você precisa fazer?" |
+| **Read** | `GET /lembretes?dono=<id>` | Lista carregada ao abrir o painel, ordenada (pendentes primeiro, por data) |
+| **Update** | `PUT /lembretes/:id` | Marcar como feito e editar texto, edital ou data |
+| **Delete** | `DELETE /lembretes/:id` | Botão da lixeira, com "Desfazer" (que recria o lembrete com um novo `POST`) |
+
+Formato de um lembrete: `{ id, dono, editalId, titulo, data: "AAAA-MM-DD", feito, criadoEm }`. O campo `dono` é um identificador aleatório do navegador, gerado na primeira visita: cada visitante vê só os próprios lembretes, e nenhum dado pessoal é enviado.
+
+**Experiência do estudante**
+- **Resposta na hora:** a mudança aparece na tela antes de a API responder. Se a API falhar, a tela volta ao que era e mostra o motivo em português.
+- **Validação antes de enviar:** título de 3 a 80 letras, data válida (hoje ou futura ao criar) e edital escolhido.
+- **Rede ruim:** tempo limite de 10 segundos, mensagens claras para falta de conexão, servidor fora do ar e excesso de requisições, e botão "Tentar de novo".
+
+**Como o código está separado**
+
+| Camada | Arquivo | Responsabilidade |
+| --- | --- | --- |
+| Acesso aos dados | [`services/apiClient.js`](src/services/apiClient.js) | `fetch` com tempo limite, tratamento de erro HTTP e endereço vindo do `.env` |
+| Acesso aos dados | [`services/lembretesService.js`](src/services/lembretesService.js) | As quatro operações do CRUD no recurso `/lembretes` |
+| Regras de negócio | [`lib/lembretes.js`](src/lib/lembretes.js) | Validação, situação (atrasado, hoje, em breve, feito) e ordenação |
+| Estado | [`context/LembretesContext.jsx`](src/context/LembretesContext.jsx) | Lista compartilhada entre as telas e atualização otimista com reversão |
+| Custom hook | [`hooks/useLembretes.js`](src/hooks/useLembretes.js) | Dispara a busca e entrega a lista filtrada e as operações para os componentes |
+| Apresentação | [`components/lembretes/`](src/components/lembretes/) | `LembretesPanel`, `LembreteForm` (criar e editar) e `LembreteItem` |
+
+**Configurar o MockAPI**
+1. Crie um projeto gratuito em [mockapi.io](https://mockapi.io).
+2. Crie o recurso **`lembretes`** com os campos `dono` (String), `editalId` (String), `titulo` (String), `data` (String), `feito` (Boolean) e `criadoEm` (Date).
+3. Copie o endereço do projeto para o `.env`: `VITE_API_URL=https://<id>.mockapi.io/api/v1`.
+
 ## Funcionalidades
 
 | Página | O que o estudante faz |
@@ -64,6 +100,7 @@ npm run preview   # serve a versão de produção
 | **Notificações** | O sino do topo lista retificações e prazos dos editais acompanhados; marcar como lida atualiza o contador | [`NotificationsMenu.jsx`](src/components/layout/NotificationsMenu.jsx) |
 | **Mar e radar interativos** | O mouse deixa ondas na água do topo da página; o feixe do radar gira sem parar e acende cada edital ao passar | [`OceanBackground.jsx`](src/components/home/OceanBackground.jsx), [`RadarTrail.jsx`](src/components/home/RadarTrail.jsx), [`Hero.jsx`](src/components/home/Hero.jsx) |
 | **Anúncio com pop-up** | Clicar no banner do plano gratuito abre a oferta completa em uma janela | [`AdBanner.jsx`](src/components/layout/AdBanner.jsx) |
+| **Lembretes (CRUD na API)** | Criar, marcar como feito, editar e excluir lembretes, salvos na API externa | [`LembretesPanel.jsx`](src/components/lembretes/LembretesPanel.jsx) e [seção do CRUD](#integração-com-api-externa-crud) |
 
 ## Como o código está organizado (Front-end Design)
 
@@ -72,8 +109,9 @@ O código separa **dados**, **regras** e **telas**:
 | Camada | Pasta | O que tem |
 | --- | --- | --- |
 | Dados | [`src/data/`](src/data/) | Editais, planos e escola (dados simulados) |
+| Acesso à API externa | [`src/services/`](src/services/) | Cliente HTTP e CRUD dos lembretes ([detalhes](#integração-com-api-externa-crud)) |
 | Regras de negócio | [`src/lib/`](src/lib/) | Situação de cada edital, próximo prazo, filtros, datas em português |
-| Estado e acesso aos dados | [`src/context/`](src/context/), [`src/hooks/`](src/hooks/) | O que o estudante acompanha, alertas, plano, tema e avisos, guardados no navegador (`localStorage`) |
+| Estado | [`src/context/`](src/context/), [`src/hooks/`](src/hooks/) | O que o estudante acompanha, alertas, plano, tema e avisos (guardados no navegador) e os lembretes (na API externa) |
 | Apresentação | [`src/components/`](src/components/), [`src/pages/`](src/pages/) | Componentes reutilizáveis e uma página por rota |
 
 **Hooks do React usados:** `useState`, `useEffect`, `useMemo`, `useCallback`, `useRef`, `useContext` e `useId`.
@@ -89,6 +127,7 @@ O código separa **dados**, **regras** e **telas**:
 | `useTheme` | Lê e troca o tema claro ou escuro |
 | `useApp` | Acesso ao estado do Edihub: editais, radar, alertas, plano e notificações |
 | `useToast` | Mostra avisos rápidos na tela, com "Desfazer" |
+| `useLembretes` | CRUD dos lembretes na API externa: lista filtrada por edital, carregamento, erro e as operações |
 
 ```
 src/
@@ -103,9 +142,11 @@ src/
 │   ├── calendar/            # MonthGrid, EventList
 │   ├── alerts/              # AlertsModal, WhatsAppPreview
 │   ├── plans/               # CheckoutModal
+│   ├── lembretes/           # LembretesPanel, LembreteForm, LembreteItem (CRUD)
 │   └── b2b/                 # InterestBars
-├── context/                 # AppContext, ThemeContext, ToastContext
+├── context/                 # AppContext, ThemeContext, ToastContext, LembretesContext
 ├── data/                    # dados simulados
+├── services/                # acesso à API externa (apiClient, lembretesService)
 ├── hooks/                   # hooks próprios
 ├── lib/                     # regras de negócio
 └── pages/                   # uma página por rota
@@ -129,7 +170,8 @@ public/
 | Canvas 2D e SVG (nativos do navegador) | — | Mar animado, rastro do radar, radar de prazos e padrão de ícones |
 | [Lucide React](https://lucide.dev) | 1.73 | Ícones |
 | [Fontsource](https://fontsource.org): Fraunces e Instrument Sans | 5.3 | Fontes, servidas pelo próprio site |
-| APIs do navegador | — | `localStorage` (dados salvos), `prefers-color-scheme` (tema do sistema), `Intl` (datas e valores em pt-BR), `IntersectionObserver` e `ResizeObserver` (pausam animações fora da tela) |
+| [MockAPI.io](https://mockapi.io) | — | API REST externa onde ficam os lembretes (CRUD) |
+| APIs do navegador | — | `fetch` (chamadas à API), `localStorage` (dados salvos), `prefers-color-scheme` (tema do sistema), `Intl` (datas e valores em pt-BR), `IntersectionObserver` e `ResizeObserver` (pausam animações fora da tela) |
 | [Node.js](https://nodejs.org) + npm | 24 / 11 | Ambiente e pacotes |
 | [Visual Studio Code](https://code.visualstudio.com) e [Prettier](https://prettier.io) | — | Editor e formatação do código |
 | [Git](https://git-scm.com) e [GitHub](https://github.com) | — | Versionamento e hospedagem |
@@ -145,6 +187,7 @@ public/
 
 ## Dados e fontes
 
+- **Lembretes:** ficam no MockAPI, ligados só a um identificador aleatório do navegador, sem nome, e-mail ou telefone.
 - **Dados simulados:** os editais, as datas, as taxas, as retificações, os anúncios e o painel escolar foram criados pela equipe para o protótipo. As datas são calculadas a partir do dia atual, para a demonstração sempre mostrar prazos reais. Nenhum dado pessoal real é usado: os nomes de alunos do painel escolar são fictícios.
 - **Logos:** vêm do [Wikimedia Commons](https://commons.wikimedia.org) e da Wikipédia em português (em `public/logos/`). São marcas das respectivas instituições, usadas só para fins acadêmicos.
 - **Banners e padrão de ícones:** criados pela equipe (em `public/ads/` e `public/patterns/`). As marcas dos anúncios são fictícias.

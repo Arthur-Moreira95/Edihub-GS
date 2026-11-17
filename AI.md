@@ -32,6 +32,7 @@ Pedidos feitos pela equipe nesta etapa do projeto, em ordem, com o que mudou no 
 | 16 | "Nessa parte use um fundo com ícones assim como o anexado" | Padrão de ícones criado pela equipe aplicado ao fundo, com versão para o tema escuro | `HowItWorks.jsx`, `public/patterns/` |
 | 17 | "Tire as bolinhas do rastro do radar. De resto mantenha" | Remoção dos pontinhos do rastro | `RadarTrail.jsx` |
 | 18 | "Publique isso no meu GitHub colocando o README com todas as ferramentas que eu usei e os integrantes" | Repositório Git, README, Integrantes e este arquivo | `README.md`, `Integrantes.md`, `AI.md` |
+| 19 | "Faça a parte da integração com API externa para o CRUD" | Lembretes do estudante salvos no MockAPI (criar, listar, editar, marcar como feito, excluir e desfazer), com camadas separadas, custom hook, validação e tratamento de erros; testado de ponta a ponta com um servidor local que imita o MockAPI | `src/services/`, `src/lib/lembretes.js`, `src/context/LembretesContext.jsx`, `src/hooks/useLembretes.js`, `src/components/lembretes/` |
 
 ## O que a equipe conferiu
 
