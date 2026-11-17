@@ -12,6 +12,7 @@ import { daysLabel } from '../ui/DaysLeft.jsx';
 import { FollowButton } from './FollowButton.jsx';
 import { EtapasTimeline } from './EtapasTimeline.jsx';
 import { RetificacaoCard } from './RetificacaoCard.jsx';
+import { LembretesPanel } from '../lembretes/LembretesPanel.jsx';
 
 function Section({ title, children }) {
   return (
@@ -90,6 +91,11 @@ export function EditalDrawer({ edital, onClose }) {
             <Section title={edital.editalPublicado ? 'Etapas do certame' : 'Etapas previstas'}>
               <EtapasTimeline etapas={etapas} previsao={!edital.editalPublicado} />
             </Section>
+
+            {/* lembretes deste edital, salvos na API externa */}
+            <div className="border-t border-line px-6 py-5">
+              <LembretesPanel editalId={edital.id} titulo="Meus lembretes deste edital" />
+            </div>
 
             <Section title={`Retificações (${retificacoes.length})`}>
               {retificacoes.length ? (

@@ -11,6 +11,7 @@ import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
 import { InstitutionMark } from '../components/ui/InstitutionMark.jsx';
 import { daysLabel } from '../components/ui/DaysLeft.jsx';
+import { LembretesPanel } from '../components/lembretes/LembretesPanel.jsx';
 
 export default function RadarPage() {
   const { editais, followed, prefs, openAlerts, disableAlerts, plan } = useApp();
@@ -102,6 +103,9 @@ export default function RadarPage() {
               ))}
             </ul>
           </section>
+
+          {/* CRUD na API externa: lembretes do estudante */}
+          <LembretesPanel className="rounded-2xl border border-line bg-surface p-5" />
 
           <section aria-labelledby="proximos30" className="rounded-2xl border border-line bg-surface p-5">
             <h2 id="proximos30" className="text-lg font-semibold text-ink">

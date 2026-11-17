@@ -8,6 +8,7 @@ import App from './App.jsx';
 import { AppProvider } from './context/AppContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
+import { LembretesProvider } from './context/LembretesContext.jsx';
 
 // HashRouter: funciona em hospedagem estática (GitHub Pages) sem configurar rewrites
 createRoot(document.getElementById('root')).render(
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')).render(
       <HashRouter>
         <ToastProvider>
           <AppProvider>
-            <App />
+            <LembretesProvider>
+              <App />
+            </LembretesProvider>
           </AppProvider>
         </ToastProvider>
       </HashRouter>
