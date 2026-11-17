@@ -5,6 +5,8 @@ Plataforma que reúne editais e prazos de vestibulares públicos, privados e con
 > **Global Solution 2026.2 · Desafio CitizenTech · FIAP · Engenharia de Software, 1º ano · Rio de Janeiro**
 > Este repositório é a parte de **Interface (Front-end Design)** e de **Interação (Web Development)** da CitizenTech da equipe.
 
+**🌐 Site no ar: [edihub-gs.vercel.app](https://edihub-gs.vercel.app)**
+
 ## Ficha da CitizenTech
 
 | | |
@@ -16,6 +18,7 @@ Plataforma que reúne editais e prazos de vestibulares públicos, privados e con
 | **Como funciona** | O Edihub monitora os editais e mostra, num só lugar, a situação de cada um e os próximos prazos. O estudante marca os vestibulares que quer acompanhar, vê tudo em um radar e em um calendário e ativa avisos que explicam, em linguagem simples, o que mudou e o que ele precisa fazer |
 | **O que cada parte faz** | **Interface (Front-end Design):** páginas em React onde o estudante vê editais, prazos, calendário e radar, com layout para celular e tema claro/escuro. **Interação (Web Development):** as funcionalidades em JavaScript: acompanhar editais, filtros e busca, alternar o tema, cadastro de alertas, notificações e anúncio com pop-up. As demais disciplinas da GS são entregues em suas próprias tarefas |
 | **Link do repositório** | https://github.com/Arthur-Moreira95/Edihub-GS |
+| **Site publicado** | https://edihub-gs.vercel.app (hospedado na Vercel, com deploy automático a cada push na `main`) |
 | **Indicador de impacto** | Quantidade de prazos de inscrição e de isenção cumpridos pelos estudantes que acompanham editais no Edihub, comparada aos prazos perdidos. Meta: nenhum prazo perdido por falta de aviso entre quem ativou os alertas |
 | **ODS conectados** | **ODS 4 – Educação de qualidade:** facilita o acesso ao ensino superior ao garantir que o estudante saiba quando e como se inscrever. **ODS 10 – Redução das desigualdades:** quem não tem cursinho, família ou escola acompanhando editais passa a ter a mesma informação de quem tem, incluindo os prazos de isenção da taxa |
 
@@ -184,7 +187,8 @@ docs/
 | APIs do navegador | — | `fetch` (chamadas à API), `localStorage` (dados salvos), `prefers-color-scheme` (tema do sistema), `Intl` (datas e valores em pt-BR), `IntersectionObserver` e `ResizeObserver` (pausam animações fora da tela) |
 | [Node.js](https://nodejs.org) + npm | 24 / 11 | Ambiente e pacotes |
 | [Visual Studio Code](https://code.visualstudio.com) e [Prettier](https://prettier.io) | — | Editor e formatação do código |
-| [Git](https://git-scm.com) e [GitHub](https://github.com) | — | Versionamento e hospedagem |
+| [Git](https://git-scm.com) e [GitHub](https://github.com) | — | Versionamento do código |
+| [Vercel](https://vercel.com) | — | Hospedagem do site, com deploy automático a cada push |
 | [Claude Code](https://claude.com/claude-code) | — | Assistente de IA: detalhes em [docs/AI.md](docs/AI.md) |
 
 ## Acessibilidade e uso real
